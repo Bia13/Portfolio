@@ -1,7 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-
-declare module "lucide-react";
 import { ArrowUpRight } from "lucide-react";
 import ProjectModal from "./ProjectModal";
 import portfolio from "../data/portfolio";

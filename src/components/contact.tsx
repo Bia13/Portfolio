@@ -1,4 +1,3 @@
-// @ts-ignore: no declaration file for framer-motion
 import { motion } from "framer-motion";
 import { FaLinkedin, FaArrowUp } from "react-icons/fa";
 import { SiGmail, SiGithub, SiBehance } from "react-icons/si";
