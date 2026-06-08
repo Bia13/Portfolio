@@ -11,7 +11,7 @@ const roles = ["Product Designer", "UX Engineer", "Front-end Developer"];
 
 const stats = [
   { value: "5+",  label: "anos de experiência" },
-  { value: "30+", label: "projetos entregues"   },
+  { value: "35+", label: "projetos entregues"   },
   { value: "B2B", label: "SaaS & Marketplaces"  },
 ];
 
