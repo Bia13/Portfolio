@@ -30,9 +30,10 @@ const categories: Category[] = [
     label: "Tecnologia & interfaces",
     color: "#378ADD",
     items: [
-      { name: "React / React Native", level: "intermediário" },
       { name: "HTML & CSS",           level: "avançado"      },
       { name: "Tailwind CSS",         level: "avançado"      },
+      { name: "React / React Native", level: "intermediário" },
+      { name: "N8N",                  level: "básico"        },
       { name: "SQL",                  level: "básico"        },
     ],
   },

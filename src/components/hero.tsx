@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Grape } from "lucide-react";
 import { SiFigma, SiReact, SiTailwindcss } from "react-icons/si";
 import { Layers } from "lucide-react";
 
 
-const roles = ["Product Designer", "UX Engineer", "Front-end Developer"];
+const roles = ["Product Designer", "UX Engineer", "AI Product Specialist", "Graphic Designer"];
 
 const stats = [
   { value: "5+",  label: "anos de experiência" },

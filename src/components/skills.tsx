@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import {
-  SiFigma, SiReact, SiTypescript, SiJavascript,
-  SiHtml5, SiCss, SiTailwindcss, SiGithub, SiJira, SiNotion,
+  SiFigma, SiCanva, SiReact, SiTypescript, SiJavascript, SiN8N, SiChatbot, SiOpenai,
+  SiHtml5, SiCss, SiTailwindcss, SiGithub, SiJira, SiNotion, SiVercel, SiPosthog, SiMysql
 } from "react-icons/si";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -12,15 +12,24 @@ const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 const skills = [
   { name: "Figma",      Icon: SiFigma,      color: "#F24E1E", category: "Design"      },
+  { name: "Canva",      Icon: SiCanva,      color: "#00C4CC", category: "Design"      },
   { name: "React",      Icon: SiReact,      color: "#61DAFB", category: "Dev"         },
   { name: "TypeScript", Icon: SiTypescript, color: "#3178C6", category: "Dev"         },
   { name: "JavaScript", Icon: SiJavascript, color: "#F7DF1E", category: "Dev"         },
   { name: "HTML",       Icon: SiHtml5,      color: "#E34F26", category: "Dev"         },
+  { name: "MySQL",      Icon: SiMysql,      color: "#4479A1", category: "Dev"         },
   { name: "CSS",        Icon: SiCss,        color: "#1572B6", category: "Dev"         },
   { name: "Tailwind",   Icon: SiTailwindcss,color: "#38B2AC", category: "Dev"         },
+  { name: "Chatbot",    Icon: SiChatbot,    color: "#10A37F", category: "Workflow"    },
   { name: "GitHub",     Icon: SiGithub,     color: "#ffffff", category: "Workflow"    },
   { name: "Jira",       Icon: SiJira,       color: "#0052CC", category: "Workflow"    },
   { name: "Notion",     Icon: SiNotion,     color: "#ffffff", category: "Workflow"    },
+  { name: "n8n",        Icon: SiN8N,        color: "#000000", category: "Workflow"    },
+  { name: "OpenAI API", Icon: SiOpenai,     color: "#412991", category: "Workflow"    },
+  { name: "Vercel",     Icon: SiVercel,     color: "#000000", category: "Workflow"    },
+  { name: "PostHog",    Icon: SiPosthog,    color: "#E64646", category: "Workflow"    },
+
+
 ];
 
 const floatingSkills = [
