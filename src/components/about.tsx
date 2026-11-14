@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
+import type { ComponentType } from "react";
+import { SiHtml5, SiTailwindcss, SiReact, SiN8N, SiFigma, SiCanva } from "react-icons/si";
+import { BiLogoAdobe } from "react-icons/bi";
+import { Clapperboard, Database } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+import { Reveal, SectionHeader } from "./ui";
 
 const LEVELS = {
   nativo:        { dots: 5 },
@@ -17,6 +17,8 @@ type Level = keyof typeof LEVELS;
 
 interface Skill {
   name?: string;
+  /** logo da ferramenta (ou ícone genérico quando não existe logo no pacote) */
+  icon?: ComponentType<{ className?: string }>;
   langKey?: "pt" | "en" | "es";
   level: Level;
 }
@@ -25,35 +27,31 @@ type CategoryLabel = "tech" | "design" | "languages";
 
 interface Category {
   label: CategoryLabel;
-  color: string;
   items: Skill[];
 }
 
 const categories: Category[] = [
   {
     label: "tech",
-    color: "#378ADD",
     items: [
-      { name: "HTML & CSS",           level: "avançado"      },
-      { name: "Tailwind CSS",         level: "avançado"      },
-      { name: "React / React Native", level: "intermediário" },
-      { name: "N8N",                  level: "básico"        },
-      { name: "SQL",                  level: "básico"        },
+      { icon: SiHtml5, name: "HTML & CSS",           level: "avançado"      },
+      { icon: SiTailwindcss, name: "Tailwind CSS",         level: "avançado"      },
+      { icon: SiReact, name: "React / React Native", level: "intermediário" },
+      { icon: SiN8N, name: "N8N",                  level: "básico"        },
+      { icon: Database, name: "SQL",                  level: "básico"        },
     ],
   },
   {
     label: "design",
-    color: "#1D9E75",
     items: [
-      { name: "Figma",       level: "profissional" },
-      { name: "Adobe Suite", level: "avançado"     },
-      { name: "Canva",       level: "avançado"     },
-      { name: "Capcut",      level: "avançado"     },
+      { icon: SiFigma, name: "Figma",       level: "profissional" },
+      { icon: BiLogoAdobe, name: "Adobe Suite", level: "avançado"     },
+      { icon: SiCanva, name: "Canva",       level: "avançado"     },
+      { icon: Clapperboard, name: "Capcut",      level: "avançado"     },
     ],
   },
   {
     label: "languages",
-    color: "#7F77DD",
     items: [
       { langKey: "pt", level: "nativo"       },
       { langKey: "en", level: "avançado" },
@@ -64,59 +62,41 @@ const categories: Category[] = [
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function SkillCard({
-  name,
-  langKey,
-  level,
-  color,
-  index,
-}: Skill & { color: string; index: number }) {
+function SkillRow({ name, icon: Icon, langKey, level }: Skill) {
   const { t } = useLanguage();
   const dots = LEVELS[level].dots;
   const label = t.about.levelLabels[level];
   const displayName = langKey ? t.about.languageNames[langKey] : name;
-  const pct = dots === 5 ? "97%" : dots === 4 ? "80%" : dots === 3 ? "55%" : "25%";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, ease: EASE, delay: index * 0.06 }}
-      className="group relative overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 p-5 transition-colors duration-300 hover:border-white/16"
-    >
-      {/* progress bar */}
-      <span
-        className="absolute bottom-0 left-0 h-[2px] opacity-60 transition-all duration-700"
-        style={{ width: pct, backgroundColor: color }}
-      />
+    <li className="flex items-center justify-between gap-4 border-t border-line-night py-4">
+      <div className="flex min-w-0 items-center gap-3.5">
+        {/* logo em uma cor só; idiomas usam a sigla no lugar de bandeira */}
+        <span
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-night-3 text-on-night"
+        >
+          {Icon ? (
+            <Icon className="h-[18px] w-[18px]" />
+          ) : (
+            <span className="eyebrow text-[11px]">{langKey}</span>
+          )}
+        </span>
+        <div className="min-w-0">
+          <p className="text-[17px] font-medium tracking-[-0.02em] text-on-night">{displayName}</p>
+          <p className="eyebrow mt-1 text-[10px] text-on-night-2">{label}</p>
+        </div>
+      </div>
 
-      <p
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
-        className="mb-1 text-sm font-medium text-zinc-100"
-      >
-        {displayName}
-      </p>
-      <p
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
-        className="mb-3 text-[11px] tracking-wide text-zinc-500"
-      >
-        {label}
-      </p>
-
-      <div className="flex gap-[5px]">
+      <div className="flex shrink-0 gap-1" aria-hidden="true">
         {Array.from({ length: 5 }).map((_, i) => (
           <span
             key={i}
-            className="h-1.5 w-1.5 rounded-full border-[1.5px] transition-colors duration-300"
-            style={{
-              borderColor: color,
-              backgroundColor: i < dots ? color : "transparent",
-            }}
+            className={`h-4 w-1.5 rounded-full ${i < dots ? "bg-on-night" : "bg-on-night/15"}`}
           />
         ))}
       </div>
-    </motion.div>
+    </li>
   );
 }
 
@@ -124,36 +104,17 @@ function CategoryBlock({ cat, catIndex }: { cat: Category; catIndex: number }) {
   const { t } = useLanguage();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, ease: EASE, delay: catIndex * 0.1 }}
-    >
-      <div className="flex items-center gap-3 mb-5">
-        <span
-          className="h-px w-6 opacity-60"
-          style={{ backgroundColor: cat.color }}
-        />
-        <p
-          style={{ fontFamily: "'DM Sans', sans-serif" }}
-          className="text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500"
-        >
-          {t.about.categories[cat.label]}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {cat.items.map((skill, i) => (
-          <SkillCard
-            key={skill.name ?? skill.langKey}
-            {...skill}
-            color={cat.color}
-            index={i}
-          />
+    <Reveal delay={catIndex * 0.08}>
+      <h3 className="eyebrow flex items-center gap-3 pb-5 text-on-night-2">
+        <span className="text-coral">{String.fromCharCode(65 + catIndex)}.</span>
+        {t.about.categories[cat.label]}
+      </h3>
+      <ul>
+        {cat.items.map((skill) => (
+          <SkillRow key={skill.name ?? skill.langKey} {...skill} />
         ))}
-      </div>
-    </motion.div>
+      </ul>
+    </Reveal>
   );
 }
 
@@ -163,76 +124,32 @@ export default function About() {
   const { t } = useLanguage();
 
   return (
-    <section id="about" className="px-8 py-32">
-      <div className="max-w-5xl mx-auto">
+    <section id="about" className="section relative">
+      <div className="shell">
+        <SectionHeader index="01" label={t.about.label} line1={t.about.titleLine1} line2={t.about.titleLine2} />
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
-        >
-          <div className="flex items-center gap-4 mb-5">
-            <div className="h-px w-12 bg-white/30" />
-            <div className="h-px w-3 bg-white/10" />
+        <div className="grid gap-8 lg:grid-cols-[25.5%_1fr]">
+          <span className="hidden lg:block" aria-hidden="true" />
+          <div className="lg:pl-6">
+            <Reveal>
+              <p className="max-w-[34ch] text-[clamp(1.35rem,2.5vw,2.125rem)] font-medium leading-[1.2] tracking-[-0.035em] text-ink">
+                {t.about.bio1}
+              </p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="mt-8 max-w-[58ch] text-[15.5px] leading-[1.6] text-ink-2">{t.about.bio2}</p>
+            </Reveal>
           </div>
-
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500"
-          >
-            {t.about.label}
-          </span>
-
-          <h2
-            style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.0 }}
-            className="mt-3 text-5xl md:text-6xl font-semibold text-white"
-          >
-            {t.about.titleLine1}
-            <br />
-            <span className="italic font-light text-zinc-400">{t.about.titleLine2}</span>
-          </h2>
-        </motion.div>
-
-        {/* Bio + divider */}
-        <div className="mt-12 grid md:grid-cols-[1fr_auto_1fr] gap-8 items-start">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[0.9375rem] leading-relaxed text-zinc-400 font-light"
-          >
-            {t.about.bio1}
-          </motion.p>
-
-          {/* vertical rule */}
-          <div className="hidden md:block w-px self-stretch bg-white/[0.06]" />
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[0.9375rem] leading-relaxed text-zinc-400 font-light"
-          >
-            {t.about.bio2}
-          </motion.p>
         </div>
+      </div>
 
-        {/* horizontal rule */}
-        <div className="my-16 h-px bg-white/[0.06]" />
-
-        {/* Skills */}
-        <div className="space-y-12">
+      {/* habilidades em painel escuro */}
+      <div className="relative z-10 mt-[clamp(56px,8vw,104px)] px-2 sm:px-3">
+        <div className="panel mx-auto grid max-w-[1400px] gap-x-12 gap-y-12 p-[clamp(20px,4vw,48px)] md:grid-cols-3 lg:rounded-[36px]">
           {categories.map((cat, i) => (
             <CategoryBlock key={cat.label} cat={cat} catIndex={i} />
           ))}
         </div>
-
       </div>
     </section>
   );
