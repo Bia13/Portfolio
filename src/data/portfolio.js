@@ -25,7 +25,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       slug: "mamba-nexus",
       title: "Mamba Nexus",
       category: "AI Marketplace Platform",
-      image: "/projects/nexus.png",
+      image: "/projects/nexus.webp",
 
       description:
         "Ecossistema para vendedores de marketplaces com automações e IA.",
@@ -48,9 +48,9 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
           { label: "Centralização", value: "3x", description: "mais funções em uma única experiência" },
         ],
         images: [
-          "/projects/mamba-nexus.png",
-          "/projects/mamba-nexus-2.png",
-          "/projects/mamba-nexus-3.png",
+          "/projects/mamba-nexus.webp",
+          "/projects/mamba-nexus-2.webp",
+          "/projects/mamba-nexus-3.webp",
         ],
       },
       translations: {
@@ -107,7 +107,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       slug: "nest-ops",
       title: "Nest Ops",
       category: "Internal Operations Platform",
-      image: "/projects/nest.png",
+      image: "/projects/nest.webp",
 
       description:
         "Sistema interno de CRM, dashboards e gestão operacional.",
@@ -130,8 +130,8 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
           { label: "Tempo de análise", value: "-45%", description: "na leitura de indicadores" },
         ],
         images: [
-          "/projects/nest-ops.png",
-          "/projects/nest-ops-3.png",
+          "/projects/nest-ops.webp",
+          "/projects/nest-ops-3.webp",
         ],
       },
       translations: {
@@ -193,7 +193,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       slug: "b2c-sales-plus",
       title: "B2C Sales Plus",
       category: "Pharmaceutical Sales Platform",
-      image: "/projects/b2c.png",
+      image: "/projects/b2c.webp",
 
       description:
         "Modernização da experiência de vendas para o setor farmacêutico.",
@@ -223,7 +223,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
 
         images: [
 
-          "/projects/b2c-3.png",
+          "/projects/b2c-3.webp",
         ],
       },
       translations: {
@@ -279,7 +279,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       slug: "cosmos-pro",
       title: "Cosmos Pro",
       category: "Enterprise Mobile Platform",
-      image: "/projects/Login Page.png",
+      image: "/projects/login-page.webp",
 
       description:
       "Aplicativo corporativo com múltiplas funcionalidades para operações empresariais.",
@@ -311,8 +311,8 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
         ],
 
         images: [
-          "/projects/cosmos2.png",
-          "/projects/cosmos3.png",
+          "/projects/cosmos2.webp",
+          "/projects/cosmos3.webp",
         ],
       },
       translations: {
@@ -368,7 +368,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
     slug: "mmc-web",
     title: "MMC Web",
     category: "Procurement Intelligence Platform",
-    image: "/projects/mmc.png",
+    image: "/projects/mmc.webp",
 
     description:
       "Plataforma para apoiar decisões estratégicas de compras corporativas.",
@@ -403,7 +403,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       ],
 
       images: [
-        "/projects/mmc1.png",
+        "/projects/mmc1.webp",
       ],
     },
     translations: {
@@ -460,7 +460,7 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
       slug: "design-systems",
       title: "Design Systems",
       category: "Scalable Design System",
-      image: "/projects/ds.png",
+      image: "/projects/ds.webp",
 
       description:
         "Sistema de design escalável com tokens, componentes e documentação.",
@@ -489,9 +489,9 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
         ],
 
         images: [
-          "/projects/design-system.png",
-          "/projects/design-system-2.png",
-          "/projects/design-system-3.png",
+          "/projects/design-system.webp",
+          "/projects/design-system-2.webp",
+          "/projects/design-system-3.webp",
         ],
       },
       translations: {
@@ -547,40 +547,52 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
 
   graphicDesignGallery: [
     {
-      image: "/projects/softfacil_1.png",
+      image: "/projects/softfacil_1.webp",
+      thumb: "/projects/softfacil_1-thumb.webp",
     },
     {
-      image: "/projects/softfacil_2.png",
+      image: "/projects/softfacil_2.webp",
+      thumb: "/projects/softfacil_2-thumb.webp",
     },
     {
-      image: "/projects/softfacil_3.png",
+      image: "/projects/softfacil_3.webp",
+      thumb: "/projects/softfacil_3-thumb.webp",
     },
         {
-      image: "/projects/rheon_1.png",
+      image: "/projects/rheon_1.webp",
+      thumb: "/projects/rheon_1-thumb.webp",
     },
         {
-      image: "/projects/rheon_2.png",
+      image: "/projects/rheon_2.webp",
+      thumb: "/projects/rheon_2-thumb.webp",
     },
         {
-      image: "/projects/rheon_3.png",
+      image: "/projects/rheon_3.webp",
+      thumb: "/projects/rheon_3-thumb.webp",
     },
     {
-      image: "/projects/reals_1.png",
+      image: "/projects/reals_1.webp",
+      thumb: "/projects/reals_1-thumb.webp",
     },
         {
-      image: "/projects/reals_2.png",
+      image: "/projects/reals_2.webp",
+      thumb: "/projects/reals_2-thumb.webp",
     },
         {
-      image: "/projects/reals_3.png",
+      image: "/projects/reals_3.webp",
+      thumb: "/projects/reals_3-thumb.webp",
     },
         {
-      image: "/projects/reals_4.png",
+      image: "/projects/reals_4.webp",
+      thumb: "/projects/reals_4-thumb.webp",
     },
         {
-      image: "/projects/reals_5.png",
+      image: "/projects/reals_5.webp",
+      thumb: "/projects/reals_5-thumb.webp",
     },
         {
-      image: "/projects/big.png",
+      image: "/projects/big.webp",
+      thumb: "/projects/big-thumb.webp",
     },
   ],
 };

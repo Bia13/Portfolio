@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import { HashRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { LanguageProvider } from "./components/LanguageContext";
 import Navbar from "./components/Navbar";
@@ -8,7 +9,7 @@ import Projects from "./components/projects";
 import Gallery from "./components/gallery";
 import Experience from "./components/experience";
 import Contact from "./components/contact";
-import ProjectModal from "./components/ProjectModal";
+import ProjectDrawer from "./components/ProjectDrawer";
 
 function Home() {
   const location = useLocation();
@@ -19,17 +20,21 @@ function Home() {
     if (!scrollTo) return;
 
     document.getElementById(scrollTo)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    navigate(location.pathname, { replace: true, state: {} });
+    navigate("/", { replace: true, state: {} });
   }, [location, navigate]);
 
   return (
     <>
-      <Hero />
-      <About />
-      <Projects />
-      <Gallery />
-      <Experience />
-      <Contact />
+      <main>
+        <Hero />
+        <About />
+        <Projects />
+        <Gallery />
+        <Experience />
+        <Contact />
+      </main>
+      {/* detalhes do projeto: abre por cima da home em /projects/:slug */}
+      <ProjectDrawer />
     </>
   );
 }
@@ -38,13 +43,15 @@ function App() {
   return (
     <LanguageProvider>
       <HashRouter>
-        <div className="bg-zinc-950 text-white">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/projects/:slug" element={<ProjectModal />} />
-          </Routes>
-        </div>
+        <MotionConfig reducedMotion="user">
+          <div className="guides" aria-hidden="true" />
+          <div className="relative min-h-screen pt-3">
+            <Navbar />
+            <Routes>
+              <Route path="*" element={<Home />} />
+            </Routes>
+          </div>
+        </MotionConfig>
       </HashRouter>
     </LanguageProvider>
   );

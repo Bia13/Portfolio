@@ -1,112 +1,77 @@
-import { motion } from "framer-motion";
-import { FaLinkedin, FaArrowUp } from "react-icons/fa";
-import { SiGmail, SiGithub, SiBehance } from "react-icons/si";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
+import { Reveal, RollButton } from "./ui";
 
 export default function Contact() {
   const { t } = useLanguage();
 
+  const links = [
+    { label: t.contact.email, value: "biafranciscodantas@gmail.com", href: "mailto:biafranciscodantas@gmail.com" },
+    { label: t.contact.linkedin, value: "linkedin.com/in/dantasbia", href: "https://linkedin.com/in/dantasbia" },
+    { label: t.contact.behance, value: "behance.net/dantasbia", href: "https://behance.net/dantasbia" },
+    { label: t.contact.github, value: "github.com/bia13", href: "https://github.com/bia13" },
+  ];
+
   return (
-    <section id="contact" className="py-32 px-8">
-      <div className="max-w-4xl mx-auto">
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-4 mb-5">
-            <div className="h-px w-12 bg-white/30" />
-            <div className="h-px w-3 bg-white/10" />
-          </div>
-
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500"
-          >
-            {t.contact.label}
-          </span>
-          <h2
-            style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.0 }}
-            className="mt-3 text-5xl md:text-6xl font-semibold text-white"
-          >
-            {t.contact.titleLine1}
-            <br />
-            <span className="italic font-light text-zinc-400">{t.contact.titleLine2}</span>
-          </h2>
-        </motion.div>
-
-        <div className="rounded-3xl border border-white/8 bg-zinc-900 p-7 md:p-9">
-          <p className="text-zinc-400 max-w-2xl">
-            {t.contact.description}
+    <section id="contact" className="relative z-10 px-2 pb-2 sm:px-3 sm:pb-3">
+      <div className="panel mx-auto max-w-[1400px] p-[clamp(20px,4vw,48px)] lg:rounded-[36px]">
+        <Reveal>
+          <p className="eyebrow flex items-center gap-3 text-on-night-2">
+            <span className="h-px w-8 bg-coral" aria-hidden="true" />
+            <span>05</span>
+            <span>{t.contact.label}</span>
           </p>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <a
-              href="https://linkedin.com/in/dantasbia"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 rounded-lg border border-zinc-800 hover:border-white/12 transition"
-            >
-              <FaLinkedin size={22} className="text-cyan-400" />
-              <div>
-                <div className="font-semibold text-white">{t.contact.linkedin}</div>
-                <div className="text-sm text-zinc-500">linkedin.com/in/dantasbia</div>
-              </div>
-            </a>
+          <h2 className="display mt-6 text-[clamp(2.75rem,9.5vw,8.5rem)]">
+            {t.contact.titleLine1}
+            <br />
+            <span className="serif-i text-[1.08em]">{t.contact.titleLine2}</span>
+          </h2>
 
-            <a
-              href="mailto:biafranciscodantas@gmail.com"
-              className="flex items-center gap-4 p-4 rounded-lg border border-zinc-800 hover:border-white/12 transition"
-            >
-              <SiGmail size={20} className="text-rose-400" />
-              <div>
-                <div className="font-semibold text-white">{t.contact.email}</div>
-                <div className="text-sm text-zinc-500">biafranciscodantas@gmail.com</div>
-              </div>
-            </a>
+          <span className="mt-[clamp(24px,4vw,48px)] block h-[2px] w-full bg-coral" aria-hidden="true" />
+        </Reveal>
 
-            <a
-              href="https://github.com/bia13"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 rounded-lg border border-zinc-800 hover:border-white/12 transition"
-            >
-              <SiGithub size={20} className="text-zinc-300" />
-              <div>
-                <div className="font-semibold text-white">{t.contact.github}</div>
-                <div className="text-sm text-zinc-500">github.com/bia13</div>
-              </div>
-            </a>
+        <div className="mt-[clamp(32px,5vw,64px)] grid gap-10 lg:grid-cols-2">
+          <Reveal>
+            <p className="max-w-[30ch] text-[clamp(1.25rem,2.2vw,1.75rem)] font-medium leading-[1.2] tracking-[-0.03em]">
+              {t.contact.description}
+            </p>
+          </Reveal>
 
-            <a
-              href="https://behance.net/dantasbia"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 rounded-lg border border-zinc-800 hover:border-white/12 transition"
-            >
-              <SiBehance size={20} className="text-indigo-400" />
-              <div>
-                <div className="font-semibold text-white">{t.contact.behance}</div>
-                <div className="text-sm text-zinc-500">behance.com/dantasbia</div>
-              </div>
-            </a>
-          </div>
-
-          
+          <Reveal delay={0.1}>
+            <ul className="border-b border-line-night">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="group flex items-center justify-between gap-4 border-t border-line-night py-5 transition-colors duration-200 hover:text-coral"
+                  >
+                    <span className="min-w-0">
+                      <span className="eyebrow block text-on-night-2">{link.label}</span>
+                      <span className="mt-1 block truncate text-[17px] font-medium tracking-[-0.02em]">
+                        {link.value}
+                      </span>
+                    </span>
+                    <ArrowUpRight className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
-        <div className="mt-8 border-t border-white/10 pt-8 text-center">
-            <button
-              type="button"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="inline-flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-950 px-6 py-3 text-sm font-medium text-white transition hover:border-white/20 hover:bg-white/5"
-            >
-              {t.contact.backToTop}
-              <FaArrowUp className="ml-2" />
-            </button>
-          </div>
+
+        <footer className="mt-[clamp(48px,7vw,96px)] flex flex-wrap items-center justify-between gap-4">
+          <p className="eyebrow text-on-night-2">© {new Date().getFullYear()} Beatriz Dantas</p>
+          <RollButton
+            variant="ghost"
+            turn={false}
+            icon={<ArrowUp />}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            {t.contact.backToTop}
+          </RollButton>
+        </footer>
       </div>
     </section>
   );

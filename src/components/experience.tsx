@@ -1,9 +1,7 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+import { EASE, Reveal, SectionHeader } from "./ui";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -140,101 +138,229 @@ const experiences = [
   },
 ];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-function TimelineDot({ current }: { current?: boolean }) {
+type Experience = (typeof experiences)[0];
+
+// a timeline horizontal só liga em telas largas e altas o bastante para caber
+const HORIZONTAL_QUERY = "(min-width: 1024px) and (min-height: 660px)";
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(query).matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+
+  return matches;
+}
+
+function useLocalized(exp: Experience) {
+  const { locale } = useLanguage();
+  const localized = exp.translations?.[locale as "en" | "es"];
+  return {
+    role: localized?.role ?? exp.role,
+    period: localized?.period ?? exp.period,
+    description: localized?.description ?? exp.description,
+  };
+}
+
+function CurrentBadge() {
   const { t } = useLanguage();
   return (
-    <div className="absolute left-0 top-[1.1rem] flex items-center justify-center">
-      {current ? (
-        <span className="relative flex h-3 w-3">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-40" />
-          <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" />
-        </span>
-      ) : (
-        <span className="h-2 w-2 rounded-full bg-zinc-700 ring-4 ring-zinc-950" />
-      )}
-    </div>
+    <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-line bg-paper-2 px-3 py-1.5 text-ink-2">
+      <span className="h-1.5 w-1.5 rounded-full bg-live" aria-hidden="true" />
+      {t.experience.currentLabel}
+    </span>
   );
 }
 
-function ExperienceCard({
-  exp,
-  index,
-}: {
-  exp: (typeof experiences)[0];
-  index: number;
-}) {
-  const { t, locale } = useLanguage();
-  const localized = exp.translations?.[locale as "en" | "es"];
-  const role = localized?.role ?? exp.role;
-  const period = localized?.period ?? exp.period;
-  const description = localized?.description ?? exp.description;
+// ── Lista vertical (celular, telas baixas e movimento reduzido) ───────────────
+
+function ExperienceRow({ exp, index }: { exp: Experience; index: number }) {
+  const { role, period, description } = useLocalized(exp);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: EASE, delay: index * 0.1 }}
-      className="relative pl-10 pb-12 last:pb-0"
-    >
-      <TimelineDot current={exp.current} />
-
-      <div className="rounded-3xl border border-white/8 bg-zinc-900 p-7 md:p-9 transition-colors duration-300 hover:border-white/14">
-
-        {/* header row */}
-        <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
-          <div>
-            <h3
-              style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.1 }}
-              className="text-2xl md:text-3xl font-semibold text-white"
-            >
-              {role}
-            </h3>
-            <p
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
-              className="mt-1 text-sm text-zinc-500"
-            >
-              {exp.company}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {exp.current && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/8 px-3 py-1 text-[11px] font-medium text-emerald-400"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                {t.experience.currentLabel}
-              </span>
-            )}
-            <span
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
-              className="text-[11px] font-medium tracking-wide text-zinc-600 tabular-nums"
-            >
-              {period}
-            </span>
-          </div>
+    <Reveal delay={index * 0.06}>
+      <article className="grid gap-x-6 gap-y-5 border-t border-line py-[clamp(28px,4vw,48px)] lg:grid-cols-[25.5%_1fr_1fr]">
+        <div className="flex flex-wrap items-center gap-3 lg:flex-col lg:items-start">
+          <p className="eyebrow text-ink-2">{period}</p>
+          {exp.current && <CurrentBadge />}
         </div>
 
-        {/* divider */}
-        <div className="mb-5 h-px bg-white/[0.06]" />
+        <div className="lg:pl-6">
+          <h3 className="display text-[clamp(1.6rem,3vw,2.125rem)] leading-[1.02] tracking-[-0.04em] text-ink">
+            {role}
+          </h3>
+          <p className="serif-i mt-2 text-2xl text-ink-2">{exp.company}</p>
+        </div>
 
-        {/* description */}
         <ul className="space-y-2.5">
           {description.map((item) => (
-            <li
-              key={item}
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
-              className="flex gap-3 text-sm leading-relaxed text-zinc-400 font-light"
-            >
-              <span className="mt-[0.45rem] h-1 w-1 flex-shrink-0 rounded-full bg-zinc-600" />
+            <li key={item} className="flex gap-3 text-[15px] leading-[1.55] text-ink-2">
+              <span className="mt-[0.7rem] h-px w-3 shrink-0 bg-coral" aria-hidden="true" />
               {item}
             </li>
           ))}
         </ul>
+      </article>
+    </Reveal>
+  );
+}
+
+// ── Timeline horizontal (a seção fixa e a trilha anda de lado) ────────────────
+
+const inViewport = { once: true, margin: "0px -22% 0px -22%" } as const;
+
+function Milestone({ exp, index }: { exp: Experience; index: number }) {
+  const { t } = useLanguage();
+  const { role, period, description } = useLocalized(exp);
+  const number = String(index + 1).padStart(2, "0");
+
+  return (
+    <li className="relative grid h-full w-[480px] shrink-0 grid-rows-2 pl-8">
+      {/* haste vertical: cresce do centro para cima e para baixo */}
+      <motion.span
+        aria-hidden="true"
+        className="absolute inset-y-0 left-0 w-px origin-center bg-on-night/25"
+        initial={{ scaleY: 0 }}
+        whileInView={{ scaleY: 1 }}
+        viewport={inViewport}
+        transition={{ duration: 1.1, ease: EASE }}
+      />
+      {/* ponto sobre a linha */}
+      <motion.span
+        aria-hidden="true"
+        className="absolute left-0 top-1/2 h-[11px] w-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-coral"
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={inViewport}
+        transition={{ duration: 0.5, ease: EASE }}
+      />
+
+      {/* acima da linha: quando, cargo e empresa */}
+      <motion.div
+        className="flex flex-col justify-end pb-7"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={inViewport}
+        transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
+      >
+        <p className="eyebrow flex flex-wrap items-center gap-3 text-on-night-2">
+          <span className="text-coral">{number}</span>
+          <span>{period}</span>
+          {exp.current && (
+            <span className="inline-flex items-center gap-2 rounded-full bg-coral px-3 py-1.5 text-ink">
+              <span className="h-1.5 w-1.5 rounded-full bg-ink" aria-hidden="true" />
+              {t.experience.currentLabel}
+            </span>
+          )}
+        </p>
+        <h3 className="display mt-4 text-[clamp(1.75rem,2.6vw,2.25rem)] leading-[1.02] tracking-[-0.04em] text-on-night">
+          {role}
+        </h3>
+        <p className="serif-i mt-1.5 text-2xl text-on-night-2">{exp.company}</p>
+      </motion.div>
+
+      {/* abaixo da linha: o que foi feito */}
+      <motion.ul
+        className="space-y-2 pt-7"
+        initial={{ opacity: 0, y: -24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={inViewport}
+        transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
+      >
+        {description.map((item) => (
+          <li key={item} className="flex gap-3 text-[13.5px] leading-[1.5] text-on-night-2">
+            <span className="mt-[0.62rem] h-px w-3 shrink-0 bg-coral" aria-hidden="true" />
+            {item}
+          </li>
+        ))}
+      </motion.ul>
+    </li>
+  );
+}
+
+function HorizontalTimeline() {
+  const { t } = useLanguage();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // quanto a trilha precisa andar = largura dela menos a largura da tela
+  const [distance, setDistance] = useState(0);
+  const distanceMV = useMotionValue(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const measure = () => {
+      const d = Math.max(0, track.scrollWidth - window.innerWidth);
+      setDistance(d);
+      distanceMV.set(d);
+    };
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(track);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [distanceMV]);
+
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start start", "end end"] });
+  const x = useTransform([scrollYProgress, distanceMV], ([p, d]: number[]) => -p * d);
+  const lineScale = useTransform(scrollYProgress, [0, 0.92], [0.08, 1]);
+
+  // começa pela experiência atual e volta no tempo, da esquerda para a direita
+  const items = experiences;
+  const firstYear = items[items.length - 1].period.match(/\d{4}/)?.[0];
+
+  return (
+    // a altura extra é o "trilho" de rolagem: cada px rolado anda 1px de lado
+    <div ref={wrapRef} className="relative z-10" style={{ height: `calc(100vh + ${distance}px)` }}>
+      <div className="sticky top-0 flex h-screen items-end overflow-hidden px-2 pb-3 pt-[84px] sm:px-3">
+        <div className="panel relative flex h-full max-h-[720px] w-full items-center overflow-hidden lg:rounded-[36px]">
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="relative flex h-[min(100%,620px)] w-max items-stretch pl-[clamp(20px,4vw,48px)] pr-[18vw] will-change-transform"
+          >
+            {/* abertura da trilha */}
+            <div className="grid w-[300px] shrink-0 grid-rows-2 pr-10">
+              <p className="eyebrow self-end pb-7 text-on-night-2">{t.experience.label}</p>
+              <p className="display pt-7 text-[clamp(2rem,3.4vw,3rem)] text-on-night">
+                {t.experience.currentLabel} —<br />
+                <span className="serif-i text-[1.08em]">{firstYear}</span>
+              </p>
+            </div>
+
+            {/* linha do tempo: desenha conforme a rolagem */}
+            <div className="relative flex">
+              <div aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-line-night" />
+              <motion.div
+                aria-hidden="true"
+                style={{ scaleX: lineScale }}
+                className="absolute inset-x-0 top-1/2 h-px origin-left -translate-y-1/2 bg-coral"
+              />
+
+              <ol className="relative flex gap-16">
+                {items.map((exp, i) => (
+                  <Milestone key={`${exp.company}-${exp.role}`} exp={exp} index={i} />
+                ))}
+              </ol>
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -242,52 +368,30 @@ function ExperienceCard({
 
 export default function Experience() {
   const { t } = useLanguage();
+  const reduce = useReducedMotion();
+  const roomy = useMediaQuery(HORIZONTAL_QUERY);
+  const horizontal = roomy && !reduce;
 
   return (
-    <section id="experience" className="py-32 px-8">
-      <div className="max-w-4xl mx-auto">
+    <section id="experience" className="section relative">
+      <div className="shell">
+        <SectionHeader
+          index="04"
+          label={t.experience.label}
+          line1={t.experience.titleLine1}
+          line2={t.experience.titleLine2}
+        />
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
-          className="mb-20"
-        >
-          <div className="flex items-center gap-4 mb-5">
-            <div className="h-px w-12 bg-white/30" />
-            <div className="h-px w-3 bg-white/10" />
+        {!horizontal && (
+          <div className="border-b border-line">
+            {experiences.map((exp, i) => (
+              <ExperienceRow key={`${exp.company}-${exp.role}`} exp={exp} index={i} />
+            ))}
           </div>
-
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500"
-          >
-            {t.experience.label}
-          </span>
-
-          <h2
-            style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.0 }}
-            className="mt-3 text-5xl md:text-6xl font-semibold text-white"
-          >
-            {t.experience.titleLine1}
-            <br />
-            <span className="italic font-light text-zinc-400">{t.experience.titleLine2}</span>
-          </h2>
-        </motion.div>
-
-        {/* Timeline */}
-        <div className="relative">
-          {/* vertical line */}
-          <div className="absolute left-[5px] top-3 bottom-0 w-px bg-gradient-to-b from-white/15 via-white/6 to-transparent" />
-
-          {experiences.map((exp, i) => (
-            <ExperienceCard key={`${exp.company}-${exp.role}`} exp={exp} index={i} />
-          ))}
-        </div>
-
+        )}
       </div>
+
+      {horizontal && <HorizontalTimeline />}
     </section>
   );
 }

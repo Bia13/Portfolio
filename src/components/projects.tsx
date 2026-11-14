@@ -1,8 +1,12 @@
-﻿import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import portfolio from "../data/portfolio";
 import { useLanguage } from "./LanguageContext";
+import { RollButton, SectionHeader } from "./ui";
 
 type Project = {
   slug: string;
@@ -39,164 +43,135 @@ type Project = {
   };
 };
 
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+// mesma condição do CSS de .stack-card (ver index.css)
+const STACK_QUERY =
+  "(min-width: 1024px) and (min-height: 680px), (max-width: 1023px) and (min-height: 760px)";
 
-function Tag({ label }: { label: string }) {
-  return (
-    <span
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-      className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wide text-zinc-500"
-    >
-      {label}
-    </span>
+function useStackEnabled() {
+  const [enabled, setEnabled] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(STACK_QUERY).matches
   );
+
+  useEffect(() => {
+    const mq = window.matchMedia(STACK_QUERY);
+    const onChange = () => setEnabled(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return enabled;
 }
 
 function ProjectCard({
   project,
   index,
+  total,
+  progress,
+  shrink,
   onOpen,
 }: {
   project: Project;
   index: number;
+  total: number;
+  progress: MotionValue<number>;
+  shrink: boolean;
   onOpen: () => void;
 }) {
   const { t, locale } = useLanguage();
   const localeProject = project.translations?.[locale as "pt" | "en" | "es"] || project;
-  const cardTitle = localeProject.title || project.title;
-  const cardCategory = localeProject.category || project.category;
-  const cardDescription = localeProject.description || project.description;
-  const cardHighlights = localeProject.highlights || project.highlights;
+  const title = localeProject.title || project.title;
+  const category = localeProject.category || project.category;
+  const description = localeProject.description || project.description;
+  const highlights = localeProject.highlights || project.highlights;
+  const number = String(index + 1).padStart(2, "0");
+
+  // conforme os próximos cards sobem, este encolhe um pouco e fica "atrás"
+  const scale = useTransform(progress, [index / total, 1], [1, 1 - (total - 1 - index) * 0.03]);
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: EASE, delay: index * 0.08 }}
-      onClick={onOpen}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onOpen()}
-      aria-label={
-        locale === "en"
-          ? `View details of ${cardTitle}`
-          : locale === "es"
-            ? `Ver detalles de ${cardTitle}`
-            : `Ver detalhes de ${cardTitle}`
-      }
-      className="
-        group relative overflow-hidden
-        rounded-3xl border border-white/8 bg-zinc-900
-        cursor-pointer outline-none
-        focus-visible:ring-2 focus-visible:ring-white/30
-        transition-colors duration-300
-        hover:border-white/16
-      "
-    >
-      <div className="relative overflow-hidden h-[260px]">
-        <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+    <div className="stack-card" style={{ "--i": index } as CSSProperties}>
+      <motion.article
+        onClick={onOpen}
+        style={shrink ? { scale, transformOrigin: "50% 0%" } : undefined}
+        className="panel group relative grid cursor-pointer overflow-hidden shadow-[0_-24px_60px_-40px_rgba(0,0,0,0.55)] ring-1 ring-line-night lg:h-[540px] lg:grid-cols-2 lg:rounded-[36px]"
+      >
+        <div className="flex flex-col p-[clamp(20px,4vw,48px)]">
+          <p className="eyebrow flex items-center justify-between gap-4 text-on-night-2">
+            <span>{category}</span>
+            <span>
+              {number} / {String(total).padStart(2, "0")}
+            </span>
+          </p>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/20 to-transparent" />
+          <h3 className="display mt-6 text-[clamp(2.25rem,5.4vw,4rem)] text-on-night">{title}</h3>
 
-        <div className="absolute top-4 left-4">
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="inline-flex items-center rounded-full border border-white/10 bg-black/50 px-3 py-1 text-[11px] font-medium tracking-[0.15em] uppercase text-zinc-400 backdrop-blur-sm"
-          >
-            {cardCategory}
-          </span>
-        </div>
-      </div>
+          <p className="mt-4 max-w-[42ch] text-[15px] leading-[1.55] text-on-night-2">{description}</p>
 
-      <div className="p-7 pt-6 space-y-4">
-        <h3
-          style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.1 }}
-          className="text-3xl font-semibold text-white"
-        >
-          {cardTitle}
-        </h3>
-
-        <p
-          style={{ fontFamily: "'DM Sans', sans-serif" }}
-          className="text-sm leading-relaxed text-zinc-400 font-light line-clamp-2"
-        >
-          {cardDescription}
-        </p>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-1.5">
-            {cardHighlights.slice(0, 3).map((h) => (
-              <Tag key={h} label={h} />
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-line-night pt-5">
+            {highlights.slice(0, 6).map((h) => (
+              <li key={h} className="eyebrow text-on-night">
+                {h}
+              </li>
             ))}
-            {cardHighlights.length > 3 && (
-              <span
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-                className="inline-flex items-center px-2 text-[11px] text-zinc-600"
-              >
-                +{cardHighlights.length - 3}
-              </span>
+            {highlights.length > 6 && (
+              <li className="eyebrow text-on-night-2">+{highlights.length - 6}</li>
             )}
-          </div>
+          </ul>
 
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="flex-shrink-0 text-xs font-medium text-zinc-500 group-hover:text-zinc-300 transition-colors duration-200 flex items-center gap-1"
-          >
-            {t.projects.detailsButton}
-            <ArrowUpRight className="h-3 w-3" />
-          </span>
+          <div className="mt-8 lg:mt-auto lg:pt-8">
+            {/* o clique no botão sobe até o <article>, que abre a drawer */}
+            <RollButton follow icon={<ArrowRight />}>
+              {t.projects.detailsButton}
+            </RollButton>
+          </div>
         </div>
-      </div>
-    </motion.article>
+
+        <div className="relative h-[200px] overflow-hidden bg-night-3 lg:h-auto">
+          <img
+            src={project.image}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
+        </div>
+      </motion.article>
+    </div>
   );
 }
 
 export default function Projects() {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const listRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const stackEnabled = useStackEnabled();
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ["start start", "end end"] });
+  const total = portfolio.projects.length;
 
   return (
-    <section id="projects" className="py-32 px-8">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE }}
-        >
-          <div className="flex items-center gap-4 mb-5">
-            <div className="h-px w-12 bg-white/30" />
-            <div className="h-px w-3 bg-white/10" />
-          </div>
+    <section id="projects" className="section relative">
+      <div className="shell">
+        <SectionHeader
+          index="02"
+          label={t.projects.label}
+          line1={t.projects.titleLine1}
+          line2={t.projects.titleLine2}
+        />
+      </div>
 
-          <span
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-            className="text-[11px] font-medium tracking-[0.18em] uppercase text-zinc-500"
-          >
-            {t.projects.label}
-          </span>
-
-          <h2
-            style={{ fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.0 }}
-            className="text-5xl md:text-6xl font-semibold text-white mt-3 mb-16"
-          >
-            {t.projects.titleLine1}
-            <br />
-            <span className="italic font-light text-zinc-400">{t.projects.titleLine2}</span>
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {portfolio.projects.map((project, i) => (
-            <ProjectCard
-              key={project.title}
-              project={project}
-              index={i}
-              onOpen={() => navigate(`/projects/${project.slug}`)}
-            />
-          ))}
-        </div>
+      <div ref={listRef} className="relative z-10 mx-auto grid max-w-[1400px] gap-4 px-2 sm:px-3">
+        {portfolio.projects.map((project, i) => (
+          <ProjectCard
+            key={project.slug}
+            project={project}
+            index={i}
+            total={total}
+            progress={scrollYProgress}
+            shrink={stackEnabled && !reduce}
+            onOpen={() => navigate(`/projects/${project.slug}`, { state: { fromHome: true } })}
+          />
+        ))}
       </div>
     </section>
   );
