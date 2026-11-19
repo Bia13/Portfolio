@@ -22,6 +22,73 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
 
   projects: [
     {
+      slug: "roberta-dantas",
+      title: "Roberta Dantas",
+      category: "Web Design · Corretora de Imóveis",
+      image: "/projects/roberta-dantas.webp",
+
+      description:
+        "Site para uma corretora de imóveis em Santos, do primeiro contato à conversa no WhatsApp.",
+
+      highlights: ["Web Design", "UX/UI", "Landing Page", "Responsivo", "Front-end", "React"],
+
+      details: {
+        overview:
+          "Site para Roberta Dantas, corretora de imóveis em Santos há mais de 10 anos. A proposta foi levar para o digital o atendimento próximo que ela oferece: apresentar quem ela é, mostrar parte da carteira de imóveis e levar o visitante direto para uma conversa.",
+        problem:
+          "A Roberta precisava de um lugar próprio para apresentar o seu trabalho e os seus imóveis, que transmitisse confiança logo na primeira visita e tornasse simples o primeiro contato.",
+        solution:
+          "Uma página única com identidade em azul-marinho e dourado, tipografia serifada e fotos em destaque. Ela reúne a apresentação da corretora, uma vitrine de imóveis com filtros por bairro, tipo e valor, o passo a passo do atendimento, perguntas frequentes e chamadas para o WhatsApp ao longo de toda a página.",
+        role:
+          "Responsável pelo web design de ponta a ponta: estrutura da página, interface, versão para celular e desenvolvimento front-end.",
+        link: "https://robertadantas.vercel.app",
+        images: [
+          "/projects/roberta-dantas.webp",
+          "/projects/roberta-dantas-2.webp",
+          "/projects/roberta-dantas-3.webp",
+          "/projects/roberta-dantas-4.webp",
+          "/projects/roberta-dantas-5.webp",
+        ],
+      },
+      translations: {
+        en: {
+          title: "Roberta Dantas",
+          category: "Web Design · Real Estate Agent",
+          description:
+            "Website for a real estate agent in Santos, from first visit to a WhatsApp conversation.",
+          highlights: ["Web Design", "UX/UI", "Landing Page", "Responsive", "Front-end", "React"],
+          details: {
+            overview:
+              "Website for Roberta Dantas, a real estate agent in Santos with more than 10 years of experience. The goal was to bring her close, personal service online: introduce who she is, show part of her property portfolio and take visitors straight into a conversation.",
+            problem:
+              "Roberta needed a place of her own to present her work and her properties, one that builds trust on the very first visit and makes the first contact easy.",
+            solution:
+              "A single page with a navy and gold identity, serif typography and prominent photography. It brings together her introduction, a property showcase filtered by neighborhood, type and price, her step-by-step process, frequently asked questions and WhatsApp calls to action throughout the page.",
+            role:
+              "Responsible for the end-to-end web design: page structure, interface, mobile version and front-end development.",
+          },
+        },
+        es: {
+          title: "Roberta Dantas",
+          category: "Web Design · Corredora Inmobiliaria",
+          description:
+            "Sitio para una corredora inmobiliaria en Santos, desde la primera visita hasta la conversación por WhatsApp.",
+          highlights: ["Web Design", "UX/UI", "Landing Page", "Responsive", "Front-end", "React"],
+          details: {
+            overview:
+              "Sitio para Roberta Dantas, corredora inmobiliaria en Santos con más de 10 años de experiencia. La propuesta fue llevar al digital la atención cercana que ella ofrece: presentar quién es, mostrar parte de su cartera de inmuebles y llevar al visitante directo a una conversación.",
+            problem:
+              "Roberta necesitaba un espacio propio para presentar su trabajo y sus inmuebles, que transmitiera confianza desde la primera visita y facilitara el primer contacto.",
+            solution:
+              "Una página única con identidad en azul marino y dorado, tipografía serif y fotos destacadas. Reúne la presentación de la corredora, una vitrina de inmuebles con filtros por barrio, tipo y valor, el paso a paso de la atención, preguntas frecuentes y llamadas a WhatsApp a lo largo de toda la página.",
+            role:
+              "Responsable del web design de punta a punta: estructura de la página, interfaz, versión móvil y desarrollo front-end.",
+          },
+        },
+      },
+    },
+
+    {
       slug: "mamba-nexus",
       title: "Mamba Nexus",
       category: "AI Marketplace Platform",
@@ -597,4 +664,18 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
   ],
 };
 
-export default portfolio;
+// As imagens ficam em public/projects. No GitHub Pages o site mora em
+// /Portfolio/, então "/projects/x.webp" quebraria: aqui todo caminho que
+// começa com /projects/ passa a usar a base do site (vite.config.js).
+const withBase = (value) => {
+  if (typeof value === "string" && value.startsWith("/projects/")) {
+    return import.meta.env.BASE_URL + value.slice(1);
+  }
+  if (Array.isArray(value)) return value.map(withBase);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, withBase(v)]));
+  }
+  return value;
+};
+
+export default withBase(portfolio);

@@ -215,7 +215,7 @@ function Badge() {
                   </div>
                 ) : (
                   <img
-                    src="/projects/hero.webp"
+                    src={`${import.meta.env.BASE_URL}projects/hero.webp`}
                     alt="Beatriz Dantas"
                     width={460}
                     height={460}

@@ -52,6 +52,7 @@ export const translations = {
       titleLine1: "Produtos que",
       titleLine2: "construí.",
       detailsButton: "Ver detalhes",
+      liveSite: "Ver site ao vivo",
     },
     gallery: {
       label: "Galeria",
@@ -148,6 +149,7 @@ export const translations = {
       titleLine1: "Products I",
       titleLine2: "built.",
       detailsButton: "View details",
+      liveSite: "View live site",
     },
     gallery: {
       label: "Gallery",
@@ -244,6 +246,7 @@ export const translations = {
       titleLine1: "Productos que",
       titleLine2: "construí.",
       detailsButton: "Ver detalles",
+      liveSite: "Ver sitio en vivo",
     },
     gallery: {
       label: "Galería",
