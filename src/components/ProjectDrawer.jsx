@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import portfolio from "../data/portfolio";
 import { useLanguage } from "./LanguageContext";
@@ -209,6 +209,14 @@ function DrawerContent({ project }) {
             {description}
           </p>
 
+          {link && (
+            <div className="mt-7">
+              <RollButton href={link} variant="dark" icon={<ArrowUpRight />} turn={false}>
+                {t.projects.liveSite}
+              </RollButton>
+            </div>
+          )}
+
           <div className="panel mt-8 overflow-hidden">
             <img src={project.image} alt="" className="h-[220px] w-full object-cover sm:h-[320px]" />
           </div>
@@ -277,8 +285,8 @@ function DrawerContent({ project }) {
 
           {link && (
             <div className="mt-8">
-              <RollButton href={link} variant="dark" icon={<ArrowRight />}>
-                {t.projectModal.viewProject}
+              <RollButton href={link} variant="dark" icon={<ArrowUpRight />} turn={false}>
+                {t.projects.liveSite}
               </RollButton>
             </div>
           )}

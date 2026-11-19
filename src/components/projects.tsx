@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import portfolio from "../data/portfolio";
 import { useLanguage } from "./LanguageContext";
 import { RollButton, SectionHeader } from "./ui";
@@ -84,6 +84,7 @@ function ProjectCard({
   const description = localeProject.description || project.description;
   const highlights = localeProject.highlights || project.highlights;
   const number = String(index + 1).padStart(2, "0");
+  const liveLink = project.details?.link;
 
   // conforme os próximos cards sobem, este encolhe um pouco e fica "atrás"
   const scale = useTransform(progress, [index / total, 1], [1, 1 - (total - 1 - index) * 0.03]);
@@ -118,11 +119,20 @@ function ProjectCard({
             )}
           </ul>
 
-          <div className="mt-8 lg:mt-auto lg:pt-8">
+          <div className="mt-8 flex flex-wrap gap-3 lg:mt-auto lg:pt-8">
             {/* o clique no botão sobe até o <article>, que abre a drawer */}
             <RollButton follow icon={<ArrowRight />}>
               {t.projects.detailsButton}
             </RollButton>
+
+            {/* site no ar: abre em outra aba sem abrir a drawer */}
+            {liveLink && (
+              <span onClick={(event) => event.stopPropagation()}>
+                <RollButton href={liveLink} variant="ghost" icon={<ArrowUpRight />} turn={false}>
+                  {t.projects.liveSite}
+                </RollButton>
+              </span>
+            )}
           </div>
         </div>
 
