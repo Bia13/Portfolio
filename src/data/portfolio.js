@@ -89,6 +89,73 @@ Nos últimos projetos liderei a criação de plataformas SaaS, ferramentas para 
     },
 
     {
+      slug: "sunlab",
+      title: "SunLab",
+      category: "E-commerce · Impressão 3D",
+      image: "/projects/sunlab.webp",
+
+      description:
+        "Loja online de peças impressas em 3D, com catálogo, compra direta e pedidos sob medida.",
+
+      highlights: ["E-commerce", "Web Design", "UX/UI", "Front-end", "React", "Integrações"],
+
+      details: {
+        overview:
+          "Loja online da SunLab, marca de impressão 3D de Santos que faz decoração, lembranças e peças personalizadas. O site apresenta as coleções, permite comprar direto pelo catálogo e transforma o pedido sob medida em um fluxo guiado, do envio da ideia ao orçamento.",
+        problem:
+          "A SunLab precisava de uma loja própria, onde o cliente encontrasse as peças, comprasse sem complicação e pedisse um projeto personalizado sem depender só de conversas soltas no WhatsApp.",
+        solution:
+          "Uma loja com vitrine por coleções, catálogo com busca e filtros por categoria, preço e estoque, página de produto com carrinho e compra direta, e um formulário em três etapas para peças sob medida. Por trás, login de clientes, acompanhamento de pedidos, painel de produtos, pagamento via PIX, e-mail de confirmação e sincronização dos pedidos com o sistema de gestão da marca.",
+        role:
+          "Design e desenvolvimento da loja: identidade visual do site, interface, fluxos de compra e de pedido personalizado, versão para celular e integrações de pagamento e pedidos.",
+        link: "https://sunlab-beatriz-dantas.vercel.app",
+        images: [
+          "/projects/sunlab.webp",
+          "/projects/sunlab-2.webp",
+          "/projects/sunlab-3.webp",
+          "/projects/sunlab-4.webp",
+          "/projects/sunlab-5.webp",
+        ],
+      },
+      translations: {
+        en: {
+          title: "SunLab",
+          category: "E-commerce · 3D Printing",
+          description:
+            "Online store for 3D-printed pieces, with a catalog, direct checkout and custom orders.",
+          highlights: ["E-commerce", "Web Design", "UX/UI", "Front-end", "React", "Integrations"],
+          details: {
+            overview:
+              "Online store for SunLab, a 3D printing brand from Santos that makes decor, keepsakes and custom pieces. The site presents the collections, lets customers buy straight from the catalog and turns custom orders into a guided flow, from sending the idea to getting a quote.",
+            problem:
+              "SunLab needed a store of its own, where customers could find the pieces, buy without friction and request a custom project without relying only on scattered WhatsApp conversations.",
+            solution:
+              "A store with a collection showcase, a catalog with search and filters by category, price and stock, product pages with cart and direct checkout, and a three-step form for custom pieces. Behind it: customer login, order tracking, a product admin panel, PIX payments, confirmation emails and order sync with the brand's management system.",
+            role:
+              "Design and development of the store: the site's visual identity, interface, checkout and custom-order flows, mobile version, and payment and order integrations.",
+          },
+        },
+        es: {
+          title: "SunLab",
+          category: "E-commerce · Impresión 3D",
+          description:
+            "Tienda online de piezas impresas en 3D, con catálogo, compra directa y pedidos a medida.",
+          highlights: ["E-commerce", "Web Design", "UX/UI", "Front-end", "React", "Integraciones"],
+          details: {
+            overview:
+              "Tienda online de SunLab, marca de impresión 3D de Santos que hace decoración, recuerdos y piezas personalizadas. El sitio presenta las colecciones, permite comprar directo desde el catálogo y convierte el pedido a medida en un flujo guiado, desde el envío de la idea hasta el presupuesto.",
+            problem:
+              "SunLab necesitaba una tienda propia, donde el cliente encontrara las piezas, comprara sin complicaciones y pidiera un proyecto personalizado sin depender solo de conversaciones sueltas por WhatsApp.",
+            solution:
+              "Una tienda con vitrina por colecciones, catálogo con búsqueda y filtros por categoría, precio y stock, página de producto con carrito y compra directa, y un formulario en tres etapas para piezas a medida. Detrás: inicio de sesión de clientes, seguimiento de pedidos, panel de productos, pago por PIX, correo de confirmación y sincronización de pedidos con el sistema de gestión de la marca.",
+            role:
+              "Diseño y desarrollo de la tienda: identidad visual del sitio, interfaz, flujos de compra y de pedido personalizado, versión móvil e integraciones de pago y pedidos.",
+          },
+        },
+      },
+    },
+
+    {
       slug: "mamba-nexus",
       title: "Mamba Nexus",
       category: "AI Marketplace Platform",
